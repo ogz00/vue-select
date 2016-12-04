@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns:v-bind="http://www.w3.org/1999/xhtml" xmlns:v-on="http://www.w3.org/1999/xhtml">
+<head>
+    <link rel="stylesheet" href="sndlp.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.2.3/css/bulma.css">
+    <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.css">
+</head>
+
+<body>
+
+
+<div id="select" class="container">
+
+    <sendlp-select id="select1" v-bind:options="options" action="callback()"
+                   label="Default Label" icon="user-circle"></sendlp-select>
+</div>
+
+
+<div id="root" class="container">
+    <task-list></task-list>
+    <sendloop-message-list></sendloop-message-list>
+
+    <button @click="showModal = true">show</button>
+    <sendloop-modal v-if="showModal" @close="showModal=false">
+        <p>
+            INSERT ANY TEXT HERE
+        </p>
+
+    </sendloop-modal>
+</div>
+
+<div id="tab" class="container">
+    <sendloop-tabs>
+        <sendloop-tab :selected="true" name="tab 1"> INSERT TEXT HERE 1</sendloop-tab>
+        <sendloop-tab name="tab 2"> INSERT TEXT HERE 2</sendloop-tab>
+        <sendloop-tab name="tab 3"> INSERT TEXT HERE 3</sendloop-tab>
+
+    </sendloop-tabs>
+
+</div>
+
+
+<script src="vue.js"></script>
+<script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.0.0/jquery.min.js"></script>
+<script src="bootstrap/js/bootstrap.min.js"></script>
+<script src="script.js"></script>
+
+
+<script type="text/javascript">
+
+    new Vue({
+        el: '#select',
+        data:{
+            selected: null,
+            options: [
+                {label: "title 1", icon: "bluetooth"},
+                {label: "title 2"}
+            ]
+        }
+    });
+
+    /*
+     Vue.component('todo-item', {
+     props: ['todo'],
+     template: '<li> <input type="checkbox" v-model="todo.complete">' +
+     '{{ todo.desc }} </li>'
+     });
+
+     var app7 = new Vue({
+     el: '#app-7',
+     data: {
+     message: 'dart durt',
+     text: '',
+     groceryList: [
+     {desc: 'Vegetables', complete: 'false'},
+     {desc: 'Cheese', complete: 'false'},
+     {desc: 'Tomatoes Juice', complete: 'false'},
+     {desc: 'Whatever else humans are supposed to eat', complete: 'false'}
+     ]
+     },
+     computed: {
+     reversedMessage() {
+     return this.message.split('').reverse().join('');
+     }
+     },
+     methods: {
+     addName() {
+     this.groceryList.push({text: this.text});
+     this.text = ''
+     }
+     }
+     });*/
+
+
+</script>
+<!--
+
+<div id="app-7" class="container">
+    <ol>
+
+<h3>TODO</h3>
+
+<todo-item v-for="item in groceryList" :todo="item"></todo-item>
+</ol>
+
+<input id="inp" type="text" v-model="text">
+
+<button @click="addName">Add New Item</button>
+
+<h1>
+    {{reversedMessage}}
+</h1>
+</div>
+ -->
+</body>
+</html>

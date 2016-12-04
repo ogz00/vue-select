@@ -1,0 +1,103 @@
+
+.sendlp-btn-group{
+    color: #313131;
+}
+
+
+.sendlp-btn-group .btn-default{
+    border-width: 2.1px;
+    border-color: #0077CC;
+    height: 42px;
+    color:#0077CC;
+}
+
+.sendlp-btn-group .btn-default:hover{
+    background-color: #E6F4FF;
+    border-color: #0077CC;
+    color: #0077CC;
+}
+.sendlp-btn-group .btn-default:focus{
+    background-color: #0077CC !important;
+    border-color: #0077CC !important;
+    color: #ffffff !important;
+}
+
+.sendlp-btn-group .sendlp-first {
+    text-align: left;
+    width: 90%;
+    min-width: 25px;;
+    border-top-left-radius: 7px;
+    border-bottom-left-radius: 0px;
+    border-right: none;
+}
+
+.sendlp-first > span > i {
+    margin-right: 14px;
+}
+
+.sendlp-first > label {
+    font-family: "Source Sans Pro";
+    font-weight: 600;
+    font-size: 20px;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+
+.sendlp-btn-group .sendlp-second {
+    width: 10%;
+    padding-right:14px;
+    border-top-right-radius: 7px;
+    border-left: none;
+    border-bottom-right-radius: 0px;
+}
+
+
+.sendlp-btn-group .dropdown-menu {
+    width: 100%;
+    height: auto;
+    overflow-y: scroll;
+    position: static;
+    margin-top: 0px;
+    border-color: #0077CC;
+    border-width: 2.1px;
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+}
+.sendlp-btn-group .dropdown-menu > li {
+    overflow: auto;
+    height: 42px;
+    border-bottom: #CACACA solid 1.7px;
+    font-weight: 400;
+    cursor: pointer;
+    padding: 7px 0px 7px 14px;
+}
+.sendlp-btn-group .dropdown-menu > li:hover {
+    background-color: #E6F4FF;
+}
+
+.selectedd {
+    background-color: #0077CC;
+}
+
+.sendlp-btn-group .dropdown-menu > li > i {
+    color: #313131;
+    float: left;
+    margin-right: 14px;
+
+}
+
+.sendlp-btn-group .dropdown-menu > li > label {
+    margin-left: 7px;
+    font-size: 20px;
+    margin-bottom: 0;
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: 400;
+    color: #313131;
+
+}
+::-webkit-scrollbar {
+    display: none;
+}
