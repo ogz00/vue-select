@@ -1,209 +1,141 @@
 /**
  * Created by oguzhankaracullu on 01/12/2016.
  */
-Vue.component('task', {
-    template: '<li><slot></slot></li>'
-});
 
-Vue.component('task-list', {
-    template: '<div> ' +
-    '<task v-for="task in tasks">{{task.desc}}</task> ' +
-    '</div>',
-    data() {
-        return {
-            tasks: [
-                {desc: 'Vegetables', complete: 'false'},
-                {desc: 'Cheese', complete: 'false'},
-                {desc: 'Tomatoes Juice', complete: 'false'},
-                {desc: 'Whatever else humans are supposed to eat', complete: 'false'}
-            ]
-        }
-    }
-});
 
-Vue.component('sendloop-message', {
-    props: ['title', 'body'],
-    data(){
-        return {
-            isVisible: true
-        };
+
+var app = new Vue();
+
+Vue.component('sendlp-option', {
+    props: {
+        value: {required: false},
+        icon: {required: false},
+
     },
-    template: '<article class="message"> ' +
-    '<div class="message-header">' +
-    '{{title}} ' +
-    '<a class="button is-small" @click="hideMessage">' +
-    '<span class="icon">' +
-    '<i class="fa fa-caret-square-o-down" aria-hidden="true"></i> </span>' +
-    '</a></div>' +
-    '<div v-show="isVisible" class="message-body">' +
-    '{{body}}' +
-    '</div>' +
-    '</article>',
-    methods: {
-        hideMessage() {
-            this.isVisible = !this.isVisible;
-        }
-    }
-});
-Vue.component('sendloop-message-list', {
-    props: ['message'],
-    template: '<div>' +
-    '<sendloop-message v-for="message in messages" :title="message.title" :body="message.body">' +
-    '</sendloop-message>' +
-    '</div>',
-    data(){
-        return {
-            messages: [
-                {title: "title 1", body: "body 1"},
-                {title: "title 2", body: "body 2"}
-            ]
-        }
-    }
-});
-
-Vue.component('sendloop-modal', {
-    template: '<div class="modal is-active">' +
-    '<div class="modal-background"></div>' +
-    '<div class="modal-content">' +
-    '<div class="box">  <slot></slot></div>' +
-    '</div>' +
-    '<button class="modal-close" @click="$emit(\'close\')"></button></div>'
-});
-
-new Vue({
-    el: '#root',
-    data: {
-        showModal: false
-    }
-});
-
-
-Vue.component('sendloop-tabs', {
-    template: '<div>' +
-    '<div class="tabs">' +
-    '<ul>' +
-    '<li v-for="tab in tabs" :class="{\'is-active\': tab.isActive}">' +
-    '<a :href="tab.href" @click="selectTab(tab)">{{tab.name}}</a></li>' +
-    '</ul>' +
-    '</div>' +
-    '<div class="tabs-details">' +
+    template: '<li @click="setSelect()">' +
+    '<i :class="[\'fa fa-\' + icon + \' fa-2x\']"></i>' +
     '<slot></slot>' +
-    '</div> </div>',
-    data(){
-        return {tabs: []};
-    },
-    created(){
-        this.tabs = this.$children;
-    },
+    '</li>',
     methods: {
-        selectTab(selectedTab){
-            this.tabs.forEach(tab => {
-                tab.isActive = (tab.name == selectedTab.name);
-            });
+        setSelect(){
+            json = {
+                label: this.$slots.default[0].text,
+                icon: this.icon,
+                value: this.value
+            };
+            app.$emit('updateSelect', json);
+
         }
     }
 });
-
-Vue.component('sendloop-tab', {
-    props: {
-        name: {required: true},
-        selected: {default: false}
-    },
-    template: '<div v-show="isActive"><slot></slot></div>',
-    data() {
-        return {isActive: false}
-    },
-    computed: {
-        href() {
-            return '#' + this.name.toLowerCase().replace(/ /g, "-");
-        }
-    },
-    mounted() {
-        this.isActive = this.selected
-    }
-});
-
-new Vue({
-    el: '#tab'
-});
-
-Vue.component('sndlp-option', {
-    template: '<i :class="[\'fa fa-\' + option.icon + \' fa-2x\']"></i>' +
-    '<label>{{ option.label }}</label>',
-    props: {
-        label: {
-            type: String,
-            required: false
-        },
-        icon: {
-            type: String,
-            required: false
-        }
-    }
-
-});
-
 
 Vue.component('sendlp-select', {
-    template: '<div class="btn-group sendlp-btn-group" style="width: 100%">' +
+    template: '<div><div class="btn-group sendlp-btn-group" style="width: 100%">' +
     '<button type="button" class="btn btn-default sendlp-first"><span><i :class="value && value.icon ? [\'fa fa-\' + value.icon + \' fa-2x\'] : icon ? [\'fa fa-\' + icon + \' fa-2x\'] : \'\'"></i>' +
     '</span><label>{{ value && value.label ? value.label : label ? label : \'\' }}</label></button>' +
-    '<button class="btn btn-default dropdown-toggle sendlp-second" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' +
+    '<button class="btn btn-default dropdown-toggle sendlp-second" type="button" data-toggle="dropdown" ' +
+    'aria-haspopup="true" aria-expanded="false" @click="getData(dataSourceUrl)">' +
     '<i class="fa fa-angle-down fa-2x"></i></button>' +
     '<ul class="dropdown-menu">' +
-    '<li v-for="option in options" @click="select(option)">' +
+    '<li v-show="searchFromServer">' +
+    '<div class="progress">' +
+    '<div class="progress-bar-info progress-bar progress-bar-striped active" role="progressbar"' +
+    'aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:100%">Loading' +
+    '</div></div>' +
+    '</li>' +
+    '<li v-show="remoteOptions.length == 0  && dataSourceUrl != undefined && !serverError">{{blankText}}</li>' +
+    '<li v-show="!searchFromServer && !serverError" v-for="option in remoteOptions" @click="select(option)">' +
     '<i :class="[\'fa fa-\' + option.icon + \' fa-2x\']"></i>' +
     '<label>{{ option.label }}</label>' +
     '</li>' +
-    '</ul></div>',
+    '<li v-show="serverError" style="height: auto">' +
+    '<div class="panel panel-default">' +
+    '<div class="panel-heading">' +
+    '<h4 class="panel-title"><span><i class="fa fa-exclamation-triangle"></i>{{errorText}}</span></h4>' +
+    '</div>' +
+    '<div class="panel-body">' +
+    '<button @click="getData(dataSourceUrl)">{{blankRetryText}}</button></div></div></li>' +
+    '<slot v-show="this.$children.length > 0"></slot>' +
+    '</ul></div></div>',
     props: {
-        searchFromServer: Boolean,
-        value: {
-            twoWay: true
+
+        blankText: [String],
+        blankRetryText: [String],
+        dataSourceUrl: {
+            type: String
         },
-        label: {
-            type: String,
-            required: false
-        },
-        icon: {
-            type: String,
-            required: false
-        },
-        options: {
-            type: Array,
-            required: false,
-            default: []
-        },
+        label: [String],
+        icon: [String],
         action: {
             type: [String, Function]
         },
-        actionLabel: {
-            type: String
-        },
-        actionIcon: [String]
+        actionLabel: [String],
+        actionIcon: [String],
+        errorText: [String],
+    },
+    data(){
+        return {
+            remoteOptions: [],
+            searchFromServer: false,
+            serverError: false,
+            selectionsOpened: false,
+            value: {
+                twoWay: true
+            }
+        };
+    },
+    mounted(){
+
+        app.$on('updateSelect', function (option) {
+            console.log(this.value);
+            this.value = option;
+
+        });
+    },
+    watch: {
+        "value": function (newVal, oldVal) {
+            console.log(oldVal + " has been changed to " + newVal);
+
+        }
+
     },
     methods: {
         select(option) {
             this.value = option
         },
-        doAction(func){
-            () => {
-                func;
+        getData(dataSourceUrl){
+
+            if ((dataSourceUrl !== undefined) && (dataSourceUrl !== '') && (dataSourceUrl !== null)) {
+                this.searchFromServer = true;
+
+                this.$http.get(dataSourceUrl + '/posts').then((response) => {
+                    this.searchFromServer = false;
+                    //TODO:this.remoteOptions = response.body; //but here I use fake json
+                    this.remoteOptions = [
+                        {label: "Option #1", icon: "bluetooth"},
+                        {label: "Option #2", icon: "book"}
+                    ];
+
+                    //TODO:can simulate blank data with that:
+                    //this.remoteOptions = [];
+
+                    //TODO:this.remoteOptions.push({label: this.label, icon: this.icon}); //if needed we can add default value to list
+
+                }, (response) => {
+                    this.serverError = true;
+                    this.searchFromServer = false;
+                });
+
             }
         }
-    },
-    mounted() {
-        this.options.push({label: this.label, icon: this.icon});
     }
-    /*data(){
-     return {
-     options: [
-     {label: "title 1", icon: "fa fa-bluetooth"},
-     {label: "title 2", icon: "fa fa-bluetooth"}
-     ]
-     }
-     }*/
 
+})
+;
+
+
+new Vue({
+    el: '#select'
 });
 
 
